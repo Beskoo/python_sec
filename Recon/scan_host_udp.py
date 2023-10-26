@@ -3,6 +3,7 @@ import os
 import sys
 import struct
 import ipaddress
+import ping3
 
 class IP:
     def __init__(self, buff=None):
@@ -30,6 +31,20 @@ class IP:
         except Exception as e:
             print('%s No protocol for %s' % (e, self.protocol_num))
         self.protocol = str(self.protocol_num)
+
+class HostChecker:
+    def __init__(self, host):
+        self.host = host
+
+    def is_reachable(self):
+        pinger = ping3.Ping()
+        response_time = pinger.ping(self.host)
+        if response_time is not None:
+            print(f"{self.host} est reachable (temps de réponse : {response_time} ms)")
+            return True
+        else:
+            print(f"{self.host} n'est pas reachable")
+            return False
 
 
 
@@ -76,3 +91,9 @@ if __name__ == '__main__':
     else:
         host = HOST
     sniff(host)
+    host_to_check = ""
+    checker = HostChecker(host_to_check)
+    checker.is_reachable()
+
+
+ 
